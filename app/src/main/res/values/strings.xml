@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">KeyKeep</string>
+    <string name="title_is_required">Title is required</string>
+    <string name="field_is_required">Field is required</string>
+    <string name="username_is_required">Username is required</string>
+    <string name="drawable">drawable</string>
+    <string name="password_error_message">Password must be at least 6 characters</string>
+    <string name="empty_username_error_message">Username is required</string>
+    <string name="empty_title_error_message">Title is required</string>
+    <string name="error_message">Please fix the errors above</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="credential_delete">"Credential deleted"</string>
+    <string name="delete_confirmation_message">Are you sure you want to delete \"%1$s\"?\n\nThis action cannot be undone</string>
+
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="off_white">#E1E1E1</color>
+    <color name="dark_grey">#323232</color>
+    <color name="red">#B60101</color>
+
+    //Gradient
+    <color name="start_color">#012B4C</color>
+    <color name="center_color">#0466B5</color>
+    <color name="end_color">#4296D6</color>
+
+    <color name="bg_main">#F4F6FA</color>
+    <color name="surface">#FFFFFF</color>
+
+    <color name="primary">#1A73E8</color>
+    <color name="primary_dark">#0F5AD1</color>
+    <color name="primary_darker">#0D47A1</color>
+    <color name="gradient_start">#1A73E8</color>
+    <color name="gradient_end">#4FC3F7</color>
+
+    <color name="text_primary">#1F1F1F</color>
+    <color name="text_secondary">#6B7280</color>
+
+    <color name="success">#34A853</color>
+</resources>

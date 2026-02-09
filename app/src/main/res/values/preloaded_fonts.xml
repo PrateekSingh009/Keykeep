@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/aguafina_script</item>
+        <item>@font/alegreya_sans</item>
+        <item>@font/amiko_bold</item>
+        <item>@font/anek_devanagari</item>
+        <item>@font/annapurna_sil</item>
+        <item>@font/caprasimo</item>
+    </array>
+</resources>

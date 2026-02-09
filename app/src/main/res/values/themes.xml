@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Credential" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.Credential" parent="Base.Theme.Credential" />
+
+    <style name="ToolbarTitleTextAppearance" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/caprasimo</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+</resources>
