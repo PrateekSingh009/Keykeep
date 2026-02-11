@@ -59,11 +59,11 @@ class AddFragment : Fragment() {
             existingCredential = it.getParcelable(ARG_CREDENTIAL)
             isEditMode = existingCredential != null
         }
-        setupToolbar()
-        setupLiveValidation()
         if (isEditMode) {
             preloadData()
         }
+        setupToolbar()
+        setupLiveValidation()
         setupIconPicker()
         setupDetailAddAndRemoveBtn()
         setupAddBtn()
@@ -76,6 +76,12 @@ class AddFragment : Fragment() {
             setupFieldLogic(btnAddPhone, btnRemovePhone, layPhoneNumber, tilPhoneNumber)
             setupFieldLogic(btnAddNote, btnRemoveNote, layNote, tilNote)
         }
+    }
+
+    private fun showBlock(labelLay: View, inputTil: View, addBtn: View) {
+        labelLay.visibility = VISIBLE
+        inputTil.visibility = VISIBLE
+        addBtn.visibility = GONE
     }
 
     private fun setupFieldLogic(addBtn: View, removeBtn: View, labelLay: View, inputTil: View) {
@@ -136,10 +142,6 @@ class AddFragment : Fragment() {
                     errorMsg = getString(R.string.password_error_message)
                 )
             ) isValid = false
-//            etUrl.isValidUrlOrShowError(required = false)
-//            etEmail.isValidEmailOrShowError(required = false)
-//            etPhoneNumber.isValidPhoneNumberOrShowError(false)
-//            etNote.isValidNoteOrShowError()
             if (layUrl.isVisible) {
                 if (!etUrl.isValidUrlOrShowError(required = true)) isValid = false
             }
@@ -192,8 +194,24 @@ class AddFragment : Fragment() {
                 etTitle.setText(credential.title)
                 etUsername.setText(credential.username)
                 etPassword.setText(credential.password)
-                etUrl.setText(credential.url)
-                etNote.setText(credential.notes)
+                if (!credential.url.isNullOrBlank()) {
+                    showBlock(layUrl, tilUrl, btnAddUrl)
+                    etUrl.setText(credential.url)
+                }
+
+                if (!credential.email.isNullOrBlank()) {
+                    showBlock(layEmail, tilEmail, btnAddEmail)
+                    etEmail.setText(credential.email)
+                }
+                if (!credential.phoneNumber.isNullOrBlank()) {
+                    showBlock(layPhoneNumber, tilPhoneNumber, btnAddPhone)
+                    etPhoneNumber.setText(credential.phoneNumber)
+                }
+                if (!credential.notes.isNullOrBlank()) {
+                    showBlock(layNote, tilNote, btnAddNote)
+                    etNote.setText(credential.notes)
+                }
+                checkAllAddBtnGone()
             }
         }
     }
