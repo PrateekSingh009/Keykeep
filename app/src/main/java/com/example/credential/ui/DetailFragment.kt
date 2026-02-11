@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -149,54 +150,70 @@ class DetailFragment : Fragment() {
             itemCredential.let {
                 tvUsername.text = it.username
                 tvPassword.text = "*".repeat(it.password.length)
-                tvNotes.text = it.notes
-                tvWebsite.text = it.url
+                bindOptionalRow(it.url, rowWebsite, sepWebsite, tvWebsite)
+                bindOptionalRow(it.email, rowEmail, sepEmail, tvEmail)
+                bindOptionalRow(it.phoneNumber, rowPhoneNumber, sepPhoneNumber, tvPhoneNumber)
+
+                if (it.notes.isNullOrBlank()) {
+                    rowNote.visibility = View.GONE
+                } else {
+                    rowNote.visibility = View.VISIBLE
+                    tvNotes.text = it.notes
+                }
             }
+        }
+    }
+
+    private fun bindOptionalRow(data: String?, row: View, separator: View, textView: TextView) {
+        if (data.isNullOrBlank()) {
+            row.visibility = View.GONE
+            separator.visibility = View.GONE
+        } else {
+            row.visibility = View.VISIBLE
+            separator.visibility = View.VISIBLE
+            textView.text = data
         }
     }
 
     private fun setupCopyButton() {
         binding.apply {
             btnCopyUsername.setOnClickListener {
-                val textToCopy = tvUsername.text.toString()
-                val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
-                val clip = ClipData.newPlainText(USERNAME_COPIED, textToCopy)
-                clipboard?.setPrimaryClip(clip)
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.copied_to_clipboard),
-                    Toast.LENGTH_SHORT
-                ).show()
+                copyToClipboard(itemCredential.username,USERNAME_COPIED)
             }
             btnCopyWebsite.setOnClickListener {
-                val textToCopy = tvWebsite.text.toString()
-                val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
-                val clip = ClipData.newPlainText(URL_COPIED, textToCopy)
-                clipboard?.setPrimaryClip(clip)
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.copied_to_clipboard),
-                    Toast.LENGTH_SHORT
-                ).show()
+                copyToClipboard(itemCredential.url,URL_COPIED)
             }
             btnCopyPassword.setOnClickListener {
-                val textToCopy = itemCredential.password
-                val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
-                val clip = ClipData.newPlainText(PASSWORD_COPIED, textToCopy)
-                clipboard?.setPrimaryClip(clip)
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.copied_to_clipboard),
-                    Toast.LENGTH_SHORT
-                ).show()
+                copyToClipboard(itemCredential.password,PASSWORD_COPIED)
+            }
+            btnCopyPhoneNumber.setOnClickListener {
+                copyToClipboard(itemCredential.phoneNumber,PHONE_NUMBER_COPIED)
+            }
+            btnCopyEmail.setOnClickListener {
+                copyToClipboard(itemCredential.email,EMAIL_COPIED)
             }
         }
+    }
+
+    private fun copyToClipboard(textToCopy: String?,label: String){
+        if (textToCopy.isNullOrBlank()) return
+
+        val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
+        val clip = ClipData.newPlainText(label, textToCopy)
+        clipboard?.setPrimaryClip(clip)
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.copied_to_clipboard),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     companion object {
         private const val ARG_CREDENTIAL = "arg_credential"
         const val PASSWORD_COPIED = "Password Copied"
         const val URL_COPIED = "URL Copied"
+        const val PHONE_NUMBER_COPIED = "Phone Number Copied"
+        const val EMAIL_COPIED = "Email Copied"
         const val USERNAME_COPIED = "Username Copied"
         const val DELETE_CREDENTIAL = "Delete Credential"
 

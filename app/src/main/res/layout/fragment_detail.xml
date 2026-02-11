@@ -55,8 +55,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:padding="4dp"
-                            android:src="@drawable/ic_user_circle"
-                            app:tint="@color/text_primary" />
+                            android:src="@drawable/ic_user_male"/>
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -112,9 +111,9 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:padding="4dp"
-                            android:src="@drawable/ic_lock_circle"
-                            app:tint="@color/primary" />
+                            android:padding="2dp"
+                            android:src="@drawable/ic_password_credential"
+                            app:backgroundTint="@color/start_color"/>
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -174,6 +173,7 @@
                         android:background="?attr/colorOutlineVariant" />
 
                     <LinearLayout
+                        android:id="@+id/row_website"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -183,9 +183,8 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:padding="4dp"
-                            android:src="@drawable/ic_web"
-                            app:tint="@color/primary_dark" />
+                            android:padding="2dp"
+                            android:src="@drawable/ic_domain" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -227,11 +226,132 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/sep_website"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="?attr/colorOutlineVariant" />
 
                     <LinearLayout
+                        android:id="@+id/row_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_email" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Email"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tv_email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="testmail@gmail.com"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btn_copy_email"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginLeft="8dp"
+                            android:background="@drawable/bg_round_corner_8"
+                            android:backgroundTint="@color/off_white"
+                            android:contentDescription="Copy website"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:tint="@color/dark_grey"
+                            android:src="@drawable/ic_copy" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/sep_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <LinearLayout
+                        android:id="@+id/row_phone_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_call"
+                            app:tint="@color/start_color"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Phone Number"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tv_phone_number"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="+918236261893"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btn_copy_phone_number"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginLeft="8dp"
+                            android:background="@drawable/bg_round_corner_8"
+                            android:backgroundTint="@color/off_white"
+                            android:contentDescription="Copy website"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:tint="@color/dark_grey"
+                            android:src="@drawable/ic_copy" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/sep_phone_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <LinearLayout
+                        android:id="@+id/row_note"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="top"
@@ -242,8 +362,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:padding="4dp"
-                            android:src="@drawable/ic_note"
-                            app:tint="@color/text_primary" />
+                            android:src="@drawable/ic_note_pad"/>
 
                         <LinearLayout
                             android:layout_width="0dp"
