@@ -20,7 +20,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,8 +31,6 @@
             android:orientation="vertical"
             android:paddingBottom="80dp">
 
-
-            <!-- Fields container -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,7 +44,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Username row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -106,7 +102,6 @@
                         android:layout_height="1dp"
                         android:background="?attr/colorOutlineVariant" />
 
-                    <!-- Password row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -178,7 +173,6 @@
                         android:layout_height="1dp"
                         android:background="?attr/colorOutlineVariant" />
 
-                    <!-- Website row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -237,7 +231,6 @@
                         android:layout_height="1dp"
                         android:background="?attr/colorOutlineVariant" />
 
-                    <!-- Notes row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -286,7 +279,6 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom action bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

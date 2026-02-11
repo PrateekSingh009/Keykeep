@@ -81,8 +81,48 @@ fun TextInputEditText.isValidUrlOrShowError(
     }
 }
 
+fun TextInputEditText.isValidNoteOrShowError(
+): Boolean {
+    val value = text?.toString()?.trim() ?: ""
+
+    return if (value.isBlank()) {
+        showError("Note is required")
+        false
+    } else {
+        clearError()
+        true
+    }
+}
+
+fun TextInputEditText.isValidPhoneNumberOrShowError(
+    required: Boolean = false,
+    errorMsg: String = "Enter a valid 10-digit Indian number"
+): Boolean {
+    val value = text?.toString()?.trim() ?: ""
+
+    if (value.isBlank()) {
+        return if (required) {
+            showError("Phone number is required")
+            false
+        } else {
+            clearError()
+            true
+        }
+    }
+
+    val indianPhoneRegex = Regex("""^(?:(?:\+|0{0,2})91[\s-]?)?[6-9]\d{9}$""")
+
+    return if (indianPhoneRegex.matches(value)) {
+        clearError()
+        true
+    } else {
+        showError(errorMsg)
+        false
+    }
+}
+
 fun TextInputEditText.isValidPasswordOrShowError(
-    minLength: Int = 8,
+    minLength: Int = 4,
     requireComplexity: Boolean = false,
     errorMsg: String = "Password must be at least $minLength characters"
 ): Boolean {
@@ -104,7 +144,7 @@ fun TextInputEditText.isValidPasswordOrShowError(
         val hasDigit = value.any { it.isDigit() }
         val hasSpecial = value.any { "!@#\$%^&*()_+-=[]{}|;:'\",.<>?/`~".contains(it) }
 
-        if (! (hasUpper && hasLower && hasDigit && hasSpecial) ) {
+        if (!(hasUpper && hasLower && hasDigit && hasSpecial)) {
             showError("Password must contain uppercase, lowercase, number & special character")
             return false
         }

@@ -1,11 +1,14 @@
 package com.example.credential.ui
 
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.createViewModelLazy
@@ -17,11 +20,17 @@ import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentAddBinding
 import com.example.credential.model.ItemCredential
 import com.example.credential.utils.extensions.isNotEmptyOrShowError
+import com.example.credential.utils.extensions.isValidEmailOrShowError
+import com.example.credential.utils.extensions.isValidNoteOrShowError
 import com.example.credential.utils.extensions.isValidPasswordOrShowError
+import com.example.credential.utils.extensions.isValidPhoneNumberOrShowError
 import com.example.credential.utils.extensions.isValidUrlOrShowError
 import com.example.credential.utils.extensions.replaceFragment
+import com.example.credential.utils.extensions.toggleFieldVisibility
 import com.example.credential.utils.utility.AppConstants
 import com.example.credential.utils.utility.IconName
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,7 +65,45 @@ class AddFragment : Fragment() {
             preloadData()
         }
         setupIconPicker()
+        setupDetailAddAndRemoveBtn()
         setupAddBtn()
+    }
+
+    private fun setupDetailAddAndRemoveBtn() {
+        binding.apply {
+            setupFieldLogic(btnAddUrl, btnRemoveUrl, layUrl, tilUrl)
+            setupFieldLogic(btnAddEmail, btnRemoveEmail, layEmail, tilEmail)
+            setupFieldLogic(btnAddPhone, btnRemovePhone, layPhoneNumber, tilPhoneNumber)
+            setupFieldLogic(btnAddNote, btnRemoveNote, layNote, tilNote)
+        }
+    }
+
+    private fun setupFieldLogic(addBtn: View, removeBtn: View, labelLay: View, inputTil: View) {
+        addBtn.setOnClickListener {
+            TransitionManager.beginDelayedTransition(binding.textContentLayout)
+            labelLay.toggleFieldVisibility(true, inputTil) {
+                addBtn.visibility = GONE
+                checkAllAddBtnGone()
+            }
+        }
+
+        removeBtn.setOnClickListener {
+            TransitionManager.beginDelayedTransition(binding.textContentLayout)
+            labelLay.toggleFieldVisibility(false, inputTil) {
+                addBtn.visibility = VISIBLE
+                (inputTil.findViewById<TextInputLayout>(inputTil.id).editText)?.text?.clear()
+                checkAllAddBtnGone()
+            }
+        }
+    }
+
+    private fun checkAllAddBtnGone() {
+        binding.apply {
+            val anyVisible = listOf(btnAddUrl, btnAddPhone, btnAddNote, btnAddEmail)
+                .any { it.visibility == VISIBLE }
+
+            tvAddDetail.visibility = if (anyVisible) VISIBLE else GONE
+        }
     }
 
     private fun setupAddBtn() {
@@ -89,9 +136,26 @@ class AddFragment : Fragment() {
                     errorMsg = getString(R.string.password_error_message)
                 )
             ) isValid = false
-            etUrl.isValidUrlOrShowError(required = false)
+//            etUrl.isValidUrlOrShowError(required = false)
+//            etEmail.isValidEmailOrShowError(required = false)
+//            etPhoneNumber.isValidPhoneNumberOrShowError(false)
+//            etNote.isValidNoteOrShowError()
+            if (layUrl.isVisible) {
+                if (!etUrl.isValidUrlOrShowError(required = true)) isValid = false
+            }
+
+            if (layEmail.isVisible) {
+                if (!etEmail.isValidEmailOrShowError(required = true)) isValid = false
+            }
+
+            if (layPhoneNumber.isVisible) {
+                if (!etPhoneNumber.isValidPhoneNumberOrShowError(required = true)) isValid = false
+            }
+
+            if (layNote.isVisible) {
+                if (!etNote.isValidNoteOrShowError()) isValid = false
+            }
         }
-//        binding.etEmail?.isValidEmailOrShowError(required = false)
         return isValid
     }
 
@@ -129,7 +193,7 @@ class AddFragment : Fragment() {
                 etUsername.setText(credential.username)
                 etPassword.setText(credential.password)
                 etUrl.setText(credential.url)
-                etNotes.setText(credential.notes)
+                etNote.setText(credential.notes)
             }
         }
     }
@@ -170,11 +234,11 @@ class AddFragment : Fragment() {
                 title = etTitle.text.toString().trim(),
                 username = etUsername.text.toString().trim(),
                 password = etPassword.text.toString(),
-                url = etUrl.text.toString().trim(),
                 icon = selectedIconName,
-                notes = etNotes.text.toString().trim(),
-                email = null,
-                phoneNumber = null,
+                url = if (layUrl.isVisible) etUrl.text.toString().trim() else "",
+                email = if (layEmail.isVisible) etEmail.text.toString().trim() else "",
+                phoneNumber = if (layPhoneNumber.isVisible) etPhoneNumber.text.toString().trim() else "",
+                notes = if (layNote.isVisible) etNote.text.toString().trim() else "",
             )
             viewModel.upsertCredential(credential)
             if (isEditMode) {
@@ -196,16 +260,22 @@ class AddFragment : Fragment() {
             }
             etPassword.doAfterTextChanged {
                 etPassword.isValidPasswordOrShowError(
-                    minLength = 6,
+                    minLength = 4,
                     requireComplexity = false
                 )
             }
             etUrl.doAfterTextChanged {
-                etUrl.isValidUrlOrShowError(required = false)
+                if (layUrl.isVisible) etUrl.isValidUrlOrShowError(required = true)
             }
-//          etEmail?.doAfterTextChanged {
-//              etEmail?.isValidEmailOrShowError(required = false)
-//        }
+            etEmail.doAfterTextChanged {
+                if (layEmail.isVisible) etEmail.isValidEmailOrShowError(required = true)
+            }
+            etPhoneNumber.doAfterTextChanged {
+                if (layPhoneNumber.isVisible) etPhoneNumber.isValidPhoneNumberOrShowError(required = true)
+            }
+            etNote.doAfterTextChanged {
+                if (layNote.isVisible) etNote.isValidNoteOrShowError()
+            }
         }
     }
 
