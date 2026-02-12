@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.credential.R
@@ -25,6 +28,7 @@ class ListFragment : Fragment() {
     private lateinit var _binding: FragmentListBinding
     private val binding get() = _binding
     private val viewModel: CredentialViewModel by viewModels<CredentialViewModel>()
+    private var isFilterApplied = false // Keep this in viewmodel to save it when the fragment is destroyed
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,9 +40,34 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolBar()
         setupObserver()
+        setupListeners()
         setupFabClick()
         viewModel.getCredentialListFromDb()
+    }
+
+    private fun setupToolBar() {
+        binding.toolbar.apply {
+            title = getString(R.string.app_name)
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.action_search -> {
+                        handleSearchClick()
+                        true
+                    }
+                    R.id.action_filter -> {
+                        toggleFilterState(menuItem)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+    }
+
+    private fun handleSearchClick() {
+        TODO("Not yet implemented")
     }
 
     private fun setupFabClick(){
@@ -49,6 +78,29 @@ class ListFragment : Fragment() {
 
     private fun onItemClick(item: ItemCredential) {
         parentFragmentManager.replaceFragment(DetailFragment.newInstance(item), R.id.fragment_container,true)
+    }
+
+    private fun setupListeners(){
+        setFragmentResultListener("category_filter") { _, bundle ->
+            val category = bundle.getString("selected_category")
+//            viewModel.filterByCategory(category)
+        }
+
+    }
+
+    private fun toggleFilterState(filterItem: MenuItem) {
+        // 1. Flip the state
+        isFilterApplied = !isFilterApplied
+
+        // 2. Change the icon based on state
+        if (isFilterApplied) {
+            filterItem.setIcon(R.drawable.ic_filter_off) // Your "Applied" icon
+            parentFragmentManager.replaceFragment(CategoryFragment.newInstance(), R.id.fragment_container,true)
+//            Toast.makeText(requireContext(), "Filter Applied", Toast.LENGTH_SHORT).show()
+        } else {
+            filterItem.setIcon(R.drawable.ic_filter) // Your "Default" icon
+            Toast.makeText(requireContext(), "Filter Removed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupObserver() {
