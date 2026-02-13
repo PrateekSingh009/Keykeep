@@ -116,6 +116,7 @@ class DetailFragment : Fragment() {
             backBtn.setOnClickListener {
                 parentFragmentManager.popBackStack()
             }
+            ivEndIcon.visibility = View.GONE
         }
     }
 

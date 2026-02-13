@@ -1,16 +1,21 @@
 package com.example.credential.ui
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.credential.adapter.CategoryAdapter
+import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentCategoryBinding
 import com.example.credential.model.ItemCategory
+import com.example.credential.utils.utility.UIState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,6 +23,7 @@ class CategoryFragment : Fragment() {
 
     private lateinit var _binding: FragmentCategoryBinding
     private val binding get() = _binding
+    private val viewModel: CredentialViewModel by viewModels<CredentialViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +36,8 @@ class CategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        setupRecyclerView(getCategoryList())
+        setupObserver()
+        viewModel.getCategoryListFromDb()
     }
 
     private fun setupToolbar() {
@@ -39,6 +46,28 @@ class CategoryFragment : Fragment() {
             tvTitle.text = TOOLBAR_TITLE
             backBtn.setOnClickListener {
                 parentFragmentManager.popBackStack()
+            }
+            ivEndIcon.visibility = GONE
+        }
+    }
+
+    private fun setupObserver() {
+        viewModel.categoryListLiveData.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UIState.Loading -> {
+                    Log.e(ContentValues.TAG, ListFragment.LOADING)
+                }
+
+                is UIState.Failure -> {
+                    Log.e(ContentValues.TAG, state.error.toString())
+                }
+
+                is UIState.Success -> {
+                    state.data.let {
+                        setupRecyclerView(it)
+                    }
+                }
+                else -> {}
             }
         }
     }
@@ -50,15 +79,6 @@ class CategoryFragment : Fragment() {
                 layoutManager = GridLayoutManager(context, 2)
             }
         }
-    }
-
-    private fun getCategoryList(): List<ItemCategory> {
-        return listOf(
-            ItemCategory("Social", "ic_social", 2),
-            ItemCategory("Shopping", "ic_shopping", 5),
-            ItemCategory("Work","ic_work",4),
-            ItemCategory("Bank","ic_bank",8)
-        )
     }
 
     private fun onItemClick(item: ItemCategory) {

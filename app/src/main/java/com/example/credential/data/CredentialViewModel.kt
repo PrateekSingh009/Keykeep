@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.credential.model.ItemCategory
 import com.example.credential.model.ItemCredential
 import com.example.credential.utils.utility.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,10 @@ class CredentialViewModel @Inject constructor(private val repository: Credential
     val credentialListLiveData: LiveData<UIState<List<ItemCredential>>>
         get() = _credentialListLiveData
 
+    private val _categoryListLiveData = MutableLiveData<UIState<List<ItemCategory>>>()
+    val categoryListLiveData: LiveData<UIState<List<ItemCategory>>>
+        get() = _categoryListLiveData
+
     fun getCredentialListFromDb() {
         _credentialListLiveData.value = UIState.Loading
         viewModelScope.launch(Dispatchers.IO) {
@@ -25,9 +30,22 @@ class CredentialViewModel @Inject constructor(private val repository: Credential
         }
     }
 
+    fun getCategoryListFromDb() {
+        _categoryListLiveData.value = UIState.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getCategoryListFromDb() { _categoryListLiveData.postValue(it) }
+        }
+    }
+
     fun upsertCredential(item: ItemCredential) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addDataToDB(item)
+        }
+    }
+
+    fun upsertCategory(item: ItemCategory) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addCategoryToDB(item)
         }
     }
 

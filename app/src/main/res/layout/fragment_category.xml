@@ -49,4 +49,23 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_remove_filter"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/start_color"
+        android:layout_gravity="bottom"
+        android:fontFamily="@font/amiko_bold"
+        android:text="Remove Filter"
+        app:icon="@drawable/ic_filter_remove"
+        app:iconGravity="textStart"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cornerRadius="8dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

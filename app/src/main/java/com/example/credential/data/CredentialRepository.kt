@@ -3,9 +3,11 @@ package com.example.credential.data
 import android.content.Context
 import android.util.Log
 import com.example.credential.database.dao.CredentialDao
+import com.example.credential.model.ItemCategory
 import com.example.credential.model.ItemCredential
+import com.example.credential.utils.extensions.toCategoryModelList
 import com.example.credential.utils.extensions.toEntity
-import com.example.credential.utils.extensions.toModelList
+import com.example.credential.utils.extensions.toCredentialModelList
 import com.example.credential.utils.utility.EncryptionHelper
 import com.example.credential.utils.utility.UIState
 import javax.inject.Inject
@@ -18,7 +20,7 @@ class CredentialRepository @Inject constructor(
 ) {
 
     suspend fun getCredentialListFromDb(result: (UIState<List<ItemCredential>>) -> Unit) {
-        val list = dao.getAllCredentials().toModelList().map {
+        val list = dao.getAllCredentials().toCredentialModelList().map {
             it.copy(
                 password = try {
                     encryptionHelper.decrypt(it.password)
@@ -26,10 +28,15 @@ class CredentialRepository @Inject constructor(
                     ""
                 }
             )
-
         }
         result.invoke(
             UIState.Success(list)
+        )
+    }
+
+    suspend fun getCategoryListFromDb(result: (UIState<List<ItemCategory>>) -> Unit) {
+        result.invoke(
+            UIState.Success(dao.getAllCategory().toCategoryModelList())
         )
     }
 
@@ -42,5 +49,9 @@ class CredentialRepository @Inject constructor(
             password = encryptionHelper.encrypt(item.password)
         )
         dao.upsert(encryptedItem.toEntity())
+    }
+
+    suspend fun addCategoryToDB(item: ItemCategory) {
+        dao.upsert(item.toEntity())
     }
 }

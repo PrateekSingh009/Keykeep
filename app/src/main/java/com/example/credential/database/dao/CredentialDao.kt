@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
+import com.example.credential.database.entity.CategoryEntity
 import com.example.credential.database.entity.CredentialEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -20,6 +21,12 @@ interface CredentialDao {
 //    @Query("SELECT * FROM credentials WHERE title = :title LIMIT 1")
 //    suspend fun getCredentialByService(title: String): CredentialEntity?
 
+    @Query("SELECT * FROM categories ORDER BY name ASC")
+    suspend fun getAllCategory(): List<CategoryEntity>
+
     @Query("DELETE FROM credentials WHERE id = :id")
     suspend fun deleteCredentials(id: Int)
+
+    @Upsert
+    suspend fun upsert(category: CategoryEntity)
 }

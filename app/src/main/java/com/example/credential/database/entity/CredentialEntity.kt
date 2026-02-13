@@ -13,5 +13,6 @@ data class CredentialEntity(
     val icon: String?,
     val notes: String?,
     val email: String?,
-    val phoneNumber: String?
+    val phoneNumber: String?,
+    val category: String? = null
 )

@@ -1,12 +1,15 @@
 package com.example.credential.ui
 
+import android.content.ContentValues
 import android.os.Bundle
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -15,9 +18,11 @@ import androidx.fragment.app.createViewModelLazy
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.credential.R
+import com.example.credential.adapter.CategoryDropdownAdapter
 import com.example.credential.adapter.IconPickerAdapter
 import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentAddBinding
+import com.example.credential.model.ItemCategory
 import com.example.credential.model.ItemCredential
 import com.example.credential.utils.extensions.isNotEmptyOrShowError
 import com.example.credential.utils.extensions.isValidEmailOrShowError
@@ -29,6 +34,7 @@ import com.example.credential.utils.extensions.replaceFragment
 import com.example.credential.utils.extensions.toggleFieldVisibility
 import com.example.credential.utils.utility.AppConstants
 import com.example.credential.utils.utility.IconName
+import com.example.credential.utils.utility.UIState
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +49,7 @@ class AddFragment : Fragment() {
     private lateinit var allIconsList: List<String>
     private var isEditMode = false
     private var existingCredential: ItemCredential? = null
-
+    private var selectedCategory: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,11 +68,61 @@ class AddFragment : Fragment() {
         if (isEditMode) {
             preloadData()
         }
+        setupObserver()
         setupToolbar()
         setupLiveValidation()
         setupIconPicker()
         setupDetailAddAndRemoveBtn()
         setupAddBtn()
+        viewModel.getCategoryListFromDb()
+    }
+
+    private fun setupObserver() {
+        viewModel.categoryListLiveData.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UIState.Loading -> {
+                    Log.e(ContentValues.TAG, ListFragment.LOADING)
+                }
+
+                is UIState.Failure -> {
+                    Log.e(ContentValues.TAG, state.error.toString())
+                }
+
+                is UIState.Success -> {
+                    state.data.let {
+                        setupCategoryDropdown(it)
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+
+    private fun setupCategoryDropdown(categories : List<ItemCategory>) {
+
+        val adapter = CategoryDropdownAdapter(requireContext(), categories)
+
+        binding.actvCategory.apply {
+            setAdapter(adapter)
+            setOnItemClickListener { _, _, position, _ ->
+                selectedCategory = categories[position].name
+                binding.actvCategory.setText(selectedCategory, false)
+                binding.tilCategory.setStartIconDrawable(
+                    requireContext().resources.getIdentifier(
+                        categories[position].icon, "drawable", requireContext().packageName
+                    )
+                )
+            }
+        }
+
+        // Pre-fill in edit mode
+        existingCredential?.category?.let { cat ->
+            val matching = categories.find { it.name == cat }
+            if (matching != null) {
+                binding.actvCategory.setText(cat, false)
+                selectedCategory = cat
+            }
+        }
     }
 
     private fun setupDetailAddAndRemoveBtn() {
@@ -185,6 +241,7 @@ class AddFragment : Fragment() {
             backBtn.setOnClickListener {
                 parentFragmentManager.popBackStack()
             }
+            ivEndIcon.visibility = GONE
         }
     }
 
@@ -255,7 +312,8 @@ class AddFragment : Fragment() {
                 icon = selectedIconName,
                 url = if (layUrl.isVisible) etUrl.text.toString().trim() else "",
                 email = if (layEmail.isVisible) etEmail.text.toString().trim() else "",
-                phoneNumber = if (layPhoneNumber.isVisible) etPhoneNumber.text.toString().trim() else "",
+                phoneNumber = if (layPhoneNumber.isVisible) etPhoneNumber.text.toString()
+                    .trim() else "",
                 notes = if (layNote.isVisible) etNote.text.toString().trim() else "",
             )
             viewModel.upsertCredential(credential)

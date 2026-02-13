@@ -13,10 +13,10 @@
         layout="@layout/custom_action_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:minHeight="?attr/actionBarSize"
-        android:visibility="visible"
         android:layout_marginTop="@dimen/appbar_top_margin"
         android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,8 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp"
         android:paddingTop="8dp"
+        android:paddingRight="24dp"
         android:paddingBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -38,10 +38,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="56dp"
             android:background="@drawable/bg_glass_20dp"
             android:elevation="3dp"
             android:orientation="vertical"
-            android:layout_marginBottom="56dp"
             android:padding="20dp">
 
             <TextView
@@ -49,8 +49,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/anek_devanagari"
                 android:text="Choose Icon"
-                android:textStyle="bold"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,8 +89,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/anek_devanagari"
                 android:text="Title"
-                android:textStyle="bold"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_title"
@@ -114,9 +114,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/anek_devanagari"
-                android:textStyle="bold"
+                android:text="Username"
                 android:textColor="@color/white"
-                android:text="Username" />
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_username"
@@ -140,9 +140,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/anek_devanagari"
-                android:textStyle="bold"
+                android:text="Password"
                 android:textColor="@color/white"
-                android:text="Password" />
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -311,30 +311,33 @@
                     android:textSize="12dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--        <TextView-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:fontFamily="@font/anek_devanagari"-->
-            <!--            android:text="Category" />-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/anek_devanagari"
+                android:text="Category"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
-            <!-- Category (you can use Exposed Dropdown or Chips) -->
-            <!--        <com.google.android.material.textfield.TextInputLayout-->
-            <!--            android:id="@+id/til_category"-->
-            <!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_marginBottom="10dp">-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_category"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:startIconTint="@color/start_color"
+                android:layout_marginBottom="10dp">
 
-            <!--            <AutoCompleteTextView-->
-            <!--                android:id="@+id/actv_category"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="40dp"-->
-            <!--                android:inputType="none"-->
-            <!--                android:textSize="15dp"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:fontFamily="@font/anek_devanagari"-->
-            <!--                android:background="@drawable/bg_round_corner_8"/>-->
-            <!--        </com.google.android.material.textfield.TextInputLayout>-->
+                <AutoCompleteTextView
+                    android:id="@+id/actv_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_round_corner_8"
+                    android:fontFamily="@font/anek_devanagari"
+                    android:inputType="none"
+                    android:textColor="@color/black"
+                    android:popupBackground="@color/off_white"
+                    android:textSize="12sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:id="@+id/lay_note"
@@ -388,11 +391,11 @@
                 android:id="@+id/tv_add_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add more details"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/anek_devanagari"
+                android:text="Add more details"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -406,18 +409,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_round_corner_8"
-                        android:padding="8dp"
                         android:backgroundTint="@color/start_color"
+                        android:padding="8dp"
                         android:src="@drawable/ic_add_url"
                         app:tint="@color/white" />
 
@@ -425,12 +428,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/anek_devanagari"
+                        android:maxLines="1"
                         android:text="Add URL"
                         android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:fontFamily="@font/anek_devanagari" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -438,18 +441,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_round_corner_8"
-                        android:padding="8dp"
                         android:backgroundTint="@color/start_color"
+                        android:padding="8dp"
                         android:src="@drawable/ic_add_email"
                         app:tint="@color/white" />
 
@@ -457,12 +460,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/anek_devanagari"
+                        android:maxLines="1"
                         android:text="Add Email"
                         android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:fontFamily="@font/anek_devanagari" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -470,18 +473,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_round_corner_8"
-                        android:padding="8dp"
                         android:backgroundTint="@color/start_color"
+                        android:padding="8dp"
                         android:src="@drawable/ic_add_phone"
                         app:tint="@color/white" />
 
@@ -489,12 +492,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Add Number"
                         android:ellipsize="end"
+                        android:fontFamily="@font/anek_devanagari"
                         android:maxLines="1"
+                        android:text="Add Number"
                         android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:fontFamily="@font/anek_devanagari" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -502,18 +505,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_round_corner_8"
-                        android:padding="8dp"
                         android:backgroundTint="@color/start_color"
+                        android:padding="8dp"
                         android:src="@drawable/ic_add_note"
                         app:tint="@color/white" />
 
@@ -521,12 +524,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/anek_devanagari"
+                        android:maxLines="1"
                         android:text="Add Note"
                         android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:fontFamily="@font/anek_devanagari" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -538,19 +541,19 @@
         android:id="@+id/btn_save"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/start_color"
         android:layout_gravity="bottom"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="24dp"
+        android:backgroundTint="@color/start_color"
         android:fontFamily="@font/amiko_bold"
         android:text="Save"
+        android:textColor="@android:color/white"
+        app:cornerRadius="8dp"
         app:icon="@drawable/ic_save"
         app:iconGravity="textStart"
-        android:textColor="@android:color/white"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:cornerRadius="8dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
