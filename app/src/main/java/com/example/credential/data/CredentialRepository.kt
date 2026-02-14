@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.credential.database.dao.CredentialDao
 import com.example.credential.model.ItemCategory
 import com.example.credential.model.ItemCredential
+import com.example.credential.utils.extensions.processList
 import com.example.credential.utils.extensions.toCategoryModelList
 import com.example.credential.utils.extensions.toEntity
 import com.example.credential.utils.extensions.toCredentialModelList
@@ -19,36 +20,15 @@ class CredentialRepository @Inject constructor(
     private val encryptionHelper: EncryptionHelper
 ) {
 
-    suspend fun getCredentialListFromDb(result: (UIState<List<ItemCredential>>) -> Unit) {
-        val list = dao.getAllCredentials().toCredentialModelList().map {
-            it.copy(
-                password = try {
-                    encryptionHelper.decrypt(it.password)
-                } catch (e: Exception) {
-                    ""
-                }
-            )
+    suspend fun getCredentialsList(categoryId: Int? = null, result: (UIState<List<ItemCredential>>) -> Unit) {
+        val rawList = if (categoryId == null || categoryId == 0) {
+            dao.getAllCredentials()
+        } else {
+            dao.getCredentialByCategoryId(categoryId)
         }
-        result.invoke(
-            UIState.Success(list)
-        )
-    }
 
-    suspend fun getCredentialListByCategoryId(categoryId: Int, result: (UIState<List<ItemCredential>>) -> Unit) {
-        val list = dao.getCredentialByCategoryId(categoryId).toCredentialModelList().map {
-            it.copy(
-                password = try {
-                    encryptionHelper.decrypt(it.password)
-                } catch (e: Exception) {
-                    ""
-                }
-            )
-        }
-        result.invoke(
-            UIState.Success(list)
-        )
+        result.invoke(UIState.Success(rawList.processList(encryptionHelper)))
     }
-
 
     suspend fun getCategoryListFromDb(result: (UIState<List<ItemCategory>>) -> Unit) {
         result.invoke(

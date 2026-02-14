@@ -5,6 +5,9 @@ import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.example.credential.database.entity.CredentialEntity
+import com.example.credential.model.ItemCredential
+import com.example.credential.utils.utility.EncryptionHelper
 import com.google.android.material.textfield.TextInputEditText
 
 fun TextInputEditText.checkEmpty(s : String) {
@@ -27,4 +30,15 @@ fun View.toggleFieldVisibility(isVisible: Boolean, vararg linkedViews: View, onT
     this.visibility = state
     linkedViews.forEach { it.visibility = state }
     onToggle()
+}
+fun List<CredentialEntity>.processList(encryptionHelper: EncryptionHelper): List<ItemCredential> {
+    return this.toCredentialModelList().map {
+        it.copy(
+            password = try {
+                encryptionHelper.decrypt(it.password)
+            } catch (e: Exception) {
+                ""
+            }
+        )
+    }
 }

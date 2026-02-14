@@ -28,10 +28,8 @@ class CredentialViewModel @Inject constructor(private val repository: Credential
     fun getCredentialListFromDb(categoryId : Int?) {
         _credentialListLiveData.value = UIState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            if (categoryId == null || categoryId == 0) {
-                repository.getCredentialListFromDb() { _credentialListLiveData.postValue(it) }
-            } else {
-                repository.getCredentialListByCategoryId(categoryId) { _credentialListLiveData.postValue(it) }
+            repository.getCredentialsList(categoryId) {
+                _credentialListLiveData.postValue(it)
             }
         }
     }
