@@ -13,18 +13,67 @@
         android:layout_height="wrap_content"
         android:background="@color/fui_transparent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/toolbar_container"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:itemIconTint="@color/off_white"
-            app:menu="@menu/menu_vault"
-            app:navigationIcon="@drawable/ic_menu"
-            app:navigationIconTint="@color/white"
-            app:popupTheme="@style/ThemeOverlay.Material3.Light"
-            app:title="KeyKeep"
-            app:titleTextAppearance="@style/ToolbarTitleTextAppearance"
-            app:titleTextColor="@color/off_white" />
+            android:layout_height="?attr/actionBarSize">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:menu="@menu/menu_vault"
+                app:navigationIcon="@drawable/ic_menu"
+                app:title="KeyKeep"
+                app:titleTextAppearance="@style/ToolbarTitleTextAppearance"
+                app:titleTextColor="@color/off_white" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/search_bar_layout"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="48dp"
+                android:background="@drawable/bg_search_pill"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_filter_dummy"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:hint="Search..."
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:paddingStart="16dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="#80FFFFFF"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_search_icon_inner"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_search_icon_inner"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/off_white" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/btn_filter_dummy"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +97,6 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -59,8 +107,8 @@
         android:background="@drawable/bg_round_corner_12"
         android:backgroundTint="@color/white"
         android:clipToPadding="false"
-        android:padding="4dp"
         android:elevation="2dp"
+        android:padding="4dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_credential" />
 

@@ -2,13 +2,17 @@ package com.example.credential.ui
 
 import android.content.ContentValues
 import android.os.Bundle
+import android.transition.ChangeBounds
+import android.transition.Fade
+import android.transition.TransitionManager
+import android.transition.TransitionSet
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,9 +21,11 @@ import com.example.credential.adapter.CredentialAdapter
 import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentListBinding
 import com.example.credential.model.ItemCredential
+import com.example.credential.utils.extensions.hideKeyboard
 import com.example.credential.utils.utility.MarginDividerItemDecoration
 import com.example.credential.utils.utility.UIState
 import com.example.credential.utils.extensions.replaceFragment
+import com.example.credential.utils.extensions.showKeyboard
 import com.example.credential.utils.utility.AppConstants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -72,20 +78,60 @@ class ListFragment : Fragment() {
     }
 
     private fun handleSearchClick() {
-        TODO("Not yet implemented")
+        toggleSearch(true)
     }
 
-    private fun setupFabClick(){
+    private fun toggleSearch(isSearching: Boolean) {
+        val transition = TransitionSet().apply {
+            addTransition(Fade())
+            addTransition(ChangeBounds())
+            duration = 250
+        }
+
+        TransitionManager.beginDelayedTransition(binding.toolbarContainer, transition)
+
+        binding.apply {
+            if (isSearching) {
+                searchBarLayout.visibility = View.VISIBLE
+                toolbar.title = ""
+                etSearch.requestFocus()
+                etSearch.showKeyboard()
+            } else {
+                searchBarLayout.visibility = View.GONE
+                toolbar.title = getString(R.string.app_name)
+                etSearch.text.clear()
+                etSearch.hideKeyboard()
+            }
+        }
+    }
+
+    private fun setupFabClick() {
         binding.btnAdd.setOnClickListener {
-            parentFragmentManager.replaceFragment(AddFragment.newInstance(null), R.id.fragment_container,true)
+            parentFragmentManager.replaceFragment(
+                AddFragment.newInstance(null),
+                R.id.fragment_container,
+                true
+            )
         }
     }
 
     private fun onItemClick(item: ItemCredential) {
-        parentFragmentManager.replaceFragment(DetailFragment.newInstance(item), R.id.fragment_container,true)
+        parentFragmentManager.replaceFragment(
+            DetailFragment.newInstance(item),
+            R.id.fragment_container,
+            true
+        )
     }
 
-    private fun setupListeners(){
+    private fun setupListeners() {
+        binding.ivSearchIconInner.setOnClickListener {
+            toggleSearch(false)
+        }
+
+        binding.etSearch.doAfterTextChanged {
+//                viewModel.filterByQuery(query)
+        }
+
         setFragmentResultListener(AppConstants.CATEGORY_FILTER) { _, bundle ->
             val categoryId = bundle.getInt(AppConstants.SELECTED_CATEGORY)
             viewModel.currentFilterId = if (categoryId == 0) null else categoryId
@@ -107,7 +153,11 @@ class ListFragment : Fragment() {
     }
 
     private fun handleFilterClick() {
-        parentFragmentManager.replaceFragment(CategoryFragment.newInstance(), R.id.fragment_container,true)
+        parentFragmentManager.replaceFragment(
+            CategoryFragment.newInstance(),
+            R.id.fragment_container,
+            true
+        )
     }
 
     private fun setupObserver() {
@@ -127,6 +177,7 @@ class ListFragment : Fragment() {
                         setupRecyclerView(it)
                     }
                 }
+
                 else -> {}
             }
         }
