@@ -8,4 +8,6 @@ object AppConstants {
     const val SAVE = "Save"
     const val UPDATE = "Update"
     const val CREDENTIAL_DATABASE = "CREDENTIAL_DATABASE"
+    const val CATEGORY_FILTER = "category_filter"
+    const val SELECTED_CATEGORY = "selected_category"
 }

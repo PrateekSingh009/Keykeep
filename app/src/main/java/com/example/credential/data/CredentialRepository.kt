@@ -34,6 +34,22 @@ class CredentialRepository @Inject constructor(
         )
     }
 
+    suspend fun getCredentialListByCategoryId(categoryId: Int, result: (UIState<List<ItemCredential>>) -> Unit) {
+        val list = dao.getCredentialByCategoryId(categoryId).toCredentialModelList().map {
+            it.copy(
+                password = try {
+                    encryptionHelper.decrypt(it.password)
+                } catch (e: Exception) {
+                    ""
+                }
+            )
+        }
+        result.invoke(
+            UIState.Success(list)
+        )
+    }
+
+
     suspend fun getCategoryListFromDb(result: (UIState<List<ItemCategory>>) -> Unit) {
         result.invoke(
             UIState.Success(dao.getAllCategory().toCategoryModelList())

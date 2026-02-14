@@ -15,6 +15,7 @@ import com.example.credential.adapter.CategoryAdapter
 import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentCategoryBinding
 import com.example.credential.model.ItemCategory
+import com.example.credential.utils.utility.AppConstants
 import com.example.credential.utils.utility.UIState
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,7 +38,22 @@ class CategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupObserver()
+        setupBtnClick()
         viewModel.getCategoryListFromDb()
+    }
+
+    private fun setupBtnClick() {
+        binding.btnRemoveFilter.setOnClickListener {
+            setupFilterFunctionality(null)
+        }
+    }
+
+    private fun setupFilterFunctionality(item: ItemCategory?){
+        parentFragmentManager.setFragmentResult(
+            AppConstants.CATEGORY_FILTER,
+            bundleOf(AppConstants.SELECTED_CATEGORY to item?.id)
+        )
+        parentFragmentManager.popBackStack()
     }
 
     private fun setupToolbar() {
@@ -75,18 +91,10 @@ class CategoryFragment : Fragment() {
     private fun setupRecyclerView(list: List<ItemCategory>?) {
         if (list != null) {
             binding.rvCategories.apply {
-                adapter = CategoryAdapter(list, ::onItemClick)
+                adapter = CategoryAdapter(list, ::setupFilterFunctionality)
                 layoutManager = GridLayoutManager(context, 2)
             }
         }
-    }
-
-    private fun onItemClick(item: ItemCategory) {
-        parentFragmentManager.setFragmentResult(
-            "category_filter",
-            bundleOf("selected_category" to item.name)
-        )
-        parentFragmentManager.popBackStack()
     }
 
     companion object {

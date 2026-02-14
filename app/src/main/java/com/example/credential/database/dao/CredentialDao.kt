@@ -15,6 +15,9 @@ interface CredentialDao {
     @Query("SELECT * FROM credentials ORDER BY title ASC")
     suspend fun getAllCredentials(): List<CredentialEntity>   // Use Flow
 
+    @Query("SELECT * FROM credentials WHERE categoryId = :categoryId")
+    suspend fun getCredentialByCategoryId(categoryId: Int): List<CredentialEntity>
+
     @Query("UPDATE categories SET count = count + 1 WHERE id = :categoryId")
     suspend fun incrementCategoryCount(categoryId: Int)
 

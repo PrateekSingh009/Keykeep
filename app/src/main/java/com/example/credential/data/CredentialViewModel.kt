@@ -23,10 +23,16 @@ class CredentialViewModel @Inject constructor(private val repository: Credential
     val categoryListLiveData: LiveData<UIState<List<ItemCategory>>>
         get() = _categoryListLiveData
 
-    fun getCredentialListFromDb() {
+    var currentFilterId: Int? = null
+
+    fun getCredentialListFromDb(categoryId : Int?) {
         _credentialListLiveData.value = UIState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getCredentialListFromDb() { _credentialListLiveData.postValue(it) }
+            if (categoryId == null || categoryId == 0) {
+                repository.getCredentialListFromDb() { _credentialListLiveData.postValue(it) }
+            } else {
+                repository.getCredentialListByCategoryId(categoryId) { _credentialListLiveData.postValue(it) }
+            }
         }
     }
 

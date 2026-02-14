@@ -20,6 +20,7 @@ import com.example.credential.model.ItemCredential
 import com.example.credential.utils.utility.MarginDividerItemDecoration
 import com.example.credential.utils.utility.UIState
 import com.example.credential.utils.extensions.replaceFragment
+import com.example.credential.utils.utility.AppConstants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,7 +29,6 @@ class ListFragment : Fragment() {
     private lateinit var _binding: FragmentListBinding
     private val binding get() = _binding
     private val viewModel: CredentialViewModel by viewModels<CredentialViewModel>()
-    private var isFilterApplied = false // Keep this in viewmodel to save it when the fragment is destroyed
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +44,12 @@ class ListFragment : Fragment() {
         setupObserver()
         setupListeners()
         setupFabClick()
-        viewModel.getCredentialListFromDb()
+        binding.toolbar.menu.findItem(R.id.action_filter).let {
+            updateFilterIcon(it)
+        }
+        if (viewModel.credentialListLiveData.value == null) {
+            viewModel.getCredentialListFromDb(null)
+        }
     }
 
     private fun setupToolBar() {
@@ -57,7 +62,7 @@ class ListFragment : Fragment() {
                         true
                     }
                     R.id.action_filter -> {
-                        toggleFilterState(menuItem)
+                        handleFilterClick()
                         true
                     }
                     else -> false
@@ -81,26 +86,28 @@ class ListFragment : Fragment() {
     }
 
     private fun setupListeners(){
-        setFragmentResultListener("category_filter") { _, bundle ->
-            val category = bundle.getString("selected_category")
-//            viewModel.filterByCategory(category)
+        setFragmentResultListener(AppConstants.CATEGORY_FILTER) { _, bundle ->
+            val categoryId = bundle.getInt(AppConstants.SELECTED_CATEGORY)
+            viewModel.currentFilterId = if (categoryId == 0) null else categoryId
+            viewModel.getCredentialListFromDb(categoryId)
+            binding.toolbar.menu.findItem(R.id.action_filter).let {
+                updateFilterIcon(it)
+            }
         }
-
     }
 
-    private fun toggleFilterState(filterItem: MenuItem) {
-        // 1. Flip the state
-        isFilterApplied = !isFilterApplied
-
-        // 2. Change the icon based on state
-        if (isFilterApplied) {
-            filterItem.setIcon(R.drawable.ic_filter_off) // Your "Applied" icon
-            parentFragmentManager.replaceFragment(CategoryFragment.newInstance(), R.id.fragment_container,true)
-//            Toast.makeText(requireContext(), "Filter Applied", Toast.LENGTH_SHORT).show()
-        } else {
-            filterItem.setIcon(R.drawable.ic_filter) // Your "Default" icon
-            Toast.makeText(requireContext(), "Filter Removed", Toast.LENGTH_SHORT).show()
+    private fun updateFilterIcon(filterItem: MenuItem?) {
+        filterItem?.let {
+            if (viewModel.currentFilterId != null && viewModel.currentFilterId != 0) {
+                it.setIcon(R.drawable.ic_filter_off)
+            } else {
+                it.setIcon(R.drawable.ic_filter)
+            }
         }
+    }
+
+    private fun handleFilterClick() {
+        parentFragmentManager.replaceFragment(CategoryFragment.newInstance(), R.id.fragment_container,true)
     }
 
     private fun setupObserver() {
