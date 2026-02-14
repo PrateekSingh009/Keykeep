@@ -49,7 +49,7 @@ class AddFragment : Fragment() {
     private lateinit var allIconsList: List<String>
     private var isEditMode = false
     private var existingCredential: ItemCredential? = null
-    private var selectedCategory: String? = null
+    private var selectedCategory: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,11 +90,24 @@ class AddFragment : Fragment() {
 
                 is UIState.Success -> {
                     state.data.let {
+                        setupInitialCategorySelection(it[0])
                         setupCategoryDropdown(it)
                     }
                 }
                 else -> {}
             }
+        }
+    }
+
+    private fun setupInitialCategorySelection(itemCategory: ItemCategory) {
+        selectedCategory = itemCategory.id
+        binding.apply{
+            actvCategory.setText(itemCategory.name, false)
+            tilCategory.setStartIconDrawable(
+                requireContext().resources.getIdentifier(
+                    itemCategory.icon, "drawable", requireContext().packageName
+                )
+            )
         }
     }
 
@@ -105,8 +118,8 @@ class AddFragment : Fragment() {
         binding.actvCategory.apply {
             setAdapter(adapter)
             setOnItemClickListener { _, _, position, _ ->
-                selectedCategory = categories[position].name
-                binding.actvCategory.setText(selectedCategory, false)
+                selectedCategory = categories[position].id
+                binding.actvCategory.setText(categories[position].name, false)
                 binding.tilCategory.setStartIconDrawable(
                     requireContext().resources.getIdentifier(
                         categories[position].icon, "drawable", requireContext().packageName
@@ -115,12 +128,16 @@ class AddFragment : Fragment() {
             }
         }
 
-        // Pre-fill in edit mode
-        existingCredential?.category?.let { cat ->
-            val matching = categories.find { it.name == cat }
+        existingCredential?.categoryId?.let { catId ->
+            val matching = categories.find { it.id == catId }
             if (matching != null) {
-                binding.actvCategory.setText(cat, false)
-                selectedCategory = cat
+                binding.actvCategory.setText(matching.name, false)
+                binding.tilCategory.setStartIconDrawable(
+                    requireContext().resources.getIdentifier(
+                        matching.icon, "drawable", requireContext().packageName
+                    )
+                )
+                selectedCategory = matching.id
             }
         }
     }
@@ -315,6 +332,7 @@ class AddFragment : Fragment() {
                 phoneNumber = if (layPhoneNumber.isVisible) etPhoneNumber.text.toString()
                     .trim() else "",
                 notes = if (layNote.isVisible) etNote.text.toString().trim() else "",
+                categoryId = selectedCategory
             )
             viewModel.upsertCredential(credential)
             if (isEditMode) {

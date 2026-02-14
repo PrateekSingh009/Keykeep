@@ -15,7 +15,8 @@ fun CredentialEntity.toModel(): ItemCredential {
         icon = icon,
         notes = notes,
         email = email,
-        phoneNumber = phoneNumber
+        phoneNumber = phoneNumber,
+        categoryId = categoryId
     )
 }
 
@@ -29,7 +30,8 @@ fun ItemCredential.toEntity(): CredentialEntity {
         icon = icon,
         notes = notes,
         email = email,
-        phoneNumber = phoneNumber
+        phoneNumber = phoneNumber,
+        categoryId = categoryId
     )
 }
 

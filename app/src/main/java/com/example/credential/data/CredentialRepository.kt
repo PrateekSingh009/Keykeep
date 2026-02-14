@@ -41,12 +41,31 @@ class CredentialRepository @Inject constructor(
     }
 
     suspend fun deleteCredential(id: Int) {
+        val credentialToDelete = dao.getById(id)
+
+        credentialToDelete?.categoryId?.let { catId ->
+            dao.decrementCategoryCount(catId)
+        }
         dao.deleteCredentials(id)
     }
 
-    suspend fun addDataToDB(item: ItemCredential) {
-        val encryptedItem = item.copy(
-            password = encryptionHelper.encrypt(item.password)
+    suspend fun addDataToDB(newCredential: ItemCredential) {
+
+        val oldCredential = if (newCredential.id != 0) {
+            dao.getById(newCredential.toEntity().id)
+        } else {
+            null
+        }
+
+        val oldCatId = oldCredential?.categoryId
+        val newCatId = newCredential.categoryId
+
+        if (oldCatId != newCatId) {
+            oldCatId?.let { dao.decrementCategoryCount(it) }
+            newCatId?.let { dao.incrementCategoryCount(it) }
+        }
+        val encryptedItem = newCredential.copy(
+            password = encryptionHelper.encrypt(newCredential.password)
         )
         dao.upsert(encryptedItem.toEntity())
     }
