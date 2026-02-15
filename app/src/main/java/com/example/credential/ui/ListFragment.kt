@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.setFragmentResultListener
@@ -189,6 +191,11 @@ class ListFragment : Fragment() {
             leftMargin = resources.getDimensionPixelSize(R.dimen.divider_margin_start),
             rightMargin = resources.getDimensionPixelSize(R.dimen.divider_margin_end)
         )
+        val isEmpty = list.isNullOrEmpty()
+
+        binding.rvCredentials.visibility = if (isEmpty) GONE else VISIBLE
+        binding.ivEmpty.visibility = if (isEmpty) VISIBLE else GONE
+
         if (list != null) {
             binding.rvCredentials.apply {
                 this.addItemDecoration(divider)
