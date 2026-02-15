@@ -65,7 +65,11 @@ class DetailFragment : Fragment() {
         binding.apply {
             btnDelete.setOnClickListener {
                 showDeleteConfirmationDialog(itemCredential) {
-                    parentFragmentManager.popBackStack()
+                    parentFragmentManager.replaceFragment(
+                        ListFragment.newInstance(),
+                        R.id.fragment_container,
+                        true
+                    )
                 }
             }
             btnEdit.setOnClickListener {
