@@ -30,6 +30,14 @@ class CredentialRepository @Inject constructor(
         result.invoke(UIState.Success(rawList.processList(encryptionHelper)))
     }
 
+    suspend fun searchCredentials(
+        query: String,
+        result: (UIState<List<ItemCredential>>) -> Unit
+    ) {
+        val rawList = dao.searchCredentials(query)
+        result.invoke(UIState.Success(rawList.processList(encryptionHelper)))
+    }
+
     suspend fun getCategoryListFromDb(result: (UIState<List<ItemCategory>>) -> Unit) {
         result.invoke(
             UIState.Success(dao.getAllCategory().toCategoryModelList())

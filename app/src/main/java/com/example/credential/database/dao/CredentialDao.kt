@@ -38,4 +38,11 @@ interface CredentialDao {
 
     @Upsert
     suspend fun upsert(category: CategoryEntity)
+
+    @Query("""
+    SELECT * FROM credentials 
+    WHERE (title LIKE '%' || :searchQuery || '%' OR username LIKE '%' || :searchQuery || '%')
+    ORDER BY title ASC
+    """)
+    suspend fun searchCredentials(searchQuery: String): List<CredentialEntity>
 }

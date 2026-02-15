@@ -2,15 +2,17 @@ package com.example.credential.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.credential.model.ItemCredential
 import com.example.credential.databinding.ItemCredentialBinding
+import com.example.credential.utils.utility.CredentialDiffCallback
 import com.example.credential.utils.viewholder.ListItemViewHolder
 
 class CredentialAdapter(
-    private val credentials: List<ItemCredential>,
     private val onClick: ((item: ItemCredential) -> Unit)?)
-    : RecyclerView.Adapter<ListItemViewHolder>() {
+    : ListAdapter<ItemCredential,ListItemViewHolder>(CredentialDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListItemViewHolder {
         return ListItemViewHolder(
@@ -23,8 +25,6 @@ class CredentialAdapter(
     }
 
     override fun onBindViewHolder(holder: ListItemViewHolder, position: Int) {
-        holder.bind(holder.itemView.context,credentials[position],onClick)
+        holder.bind(holder.itemView.context,getItem(position),onClick)
     }
-
-    override fun getItemCount() = credentials.size
 }

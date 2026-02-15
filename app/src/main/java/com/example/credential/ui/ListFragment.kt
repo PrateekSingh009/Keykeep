@@ -2,6 +2,8 @@ package com.example.credential.ui
 
 import android.content.ContentValues
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.transition.ChangeBounds
 import android.transition.Fade
 import android.transition.TransitionManager
@@ -14,9 +16,11 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.credential.R
 import com.example.credential.adapter.CredentialAdapter
@@ -30,6 +34,9 @@ import com.example.credential.utils.extensions.replaceFragment
 import com.example.credential.utils.extensions.showKeyboard
 import com.example.credential.utils.utility.AppConstants
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
@@ -37,6 +44,10 @@ class ListFragment : Fragment() {
     private lateinit var _binding: FragmentListBinding
     private val binding get() = _binding
     private val viewModel: CredentialViewModel by viewModels<CredentialViewModel>()
+    private lateinit var adapter: CredentialAdapter
+
+    private var searchJob: Job? = null
+    private var currentSearchQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +59,13 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adapter = CredentialAdapter { credential ->
+            onItemClick(credential)
+        }
+
         setupToolBar()
+        setupRecyclerView()
         setupObserver()
         setupListeners()
         setupFabClick()
@@ -69,10 +86,12 @@ class ListFragment : Fragment() {
                         handleSearchClick()
                         true
                     }
+
                     R.id.action_filter -> {
                         handleFilterClick()
                         true
                     }
+
                     else -> false
                 }
             }
@@ -81,6 +100,34 @@ class ListFragment : Fragment() {
 
     private fun handleSearchClick() {
         toggleSearch(true)
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val query = s?.toString()?.trim() ?: ""
+                if (query != currentSearchQuery) {
+                    currentSearchQuery = query
+                    debounceSearch(query)
+                }
+            }
+        })
+    }
+
+    private fun debounceSearch(query: String) {
+        searchJob?.cancel()
+        searchJob = viewLifecycleOwner.lifecycleScope.launch {
+            delay(300)
+            performSearch(query)
+        }
+    }
+
+    private fun performSearch(query: String) {
+        if (query.isEmpty()) {
+            viewModel.getCredentialListFromDb(viewModel.currentFilterId)
+        } else {
+            viewModel.filterByQuery(query)
+        }
     }
 
     private fun toggleSearch(isSearching: Boolean) {
@@ -130,10 +177,6 @@ class ListFragment : Fragment() {
             toggleSearch(false)
         }
 
-        binding.etSearch.doAfterTextChanged {
-//                viewModel.filterByQuery(query)
-        }
-
         setFragmentResultListener(AppConstants.CATEGORY_FILTER) { _, bundle ->
             val categoryId = bundle.getInt(AppConstants.SELECTED_CATEGORY)
             viewModel.currentFilterId = if (categoryId == 0) null else categoryId
@@ -176,7 +219,8 @@ class ListFragment : Fragment() {
                 is UIState.Success -> {
                     state.data.let {
                         Log.i(CREDENTIAL_ITEM_LIST, it.toString())
-                        setupRecyclerView(it)
+                        adapter.submitList(it)
+                        setupEmptyListView(it)
                     }
                 }
 
@@ -185,25 +229,38 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun setupRecyclerView(list: List<ItemCredential>?) {
+    private fun setupRecyclerView() {
         val divider = MarginDividerItemDecoration(
             requireContext(),
             leftMargin = resources.getDimensionPixelSize(R.dimen.divider_margin_start),
             rightMargin = resources.getDimensionPixelSize(R.dimen.divider_margin_end)
         )
+        binding.rvCredentials.apply {
+            this.addItemDecoration(divider)
+            adapter = this@ListFragment.adapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+    }
+
+    private fun setupEmptyListView(list: List<ItemCredential>?) {
         val isEmpty = list.isNullOrEmpty()
-
-        binding.rvCredentials.visibility = if (isEmpty) GONE else VISIBLE
-        binding.ivEmpty.visibility = if (isEmpty) VISIBLE else GONE
-
-        if (list != null) {
-            binding.rvCredentials.apply {
-                this.addItemDecoration(divider)
-                adapter = CredentialAdapter(list, ::onItemClick)
-                layoutManager = LinearLayoutManager(context)
-            }
+        val rootLayout = binding.root.parent as? ViewGroup ?: return
+        if (isEmpty) {
+            TransitionManager.beginDelayedTransition(rootLayout)
+            binding.rvCredentials.visibility = GONE
+            binding.ivEmpty.visibility = VISIBLE
+        } else {
+            binding.rvCredentials.visibility = VISIBLE
+            binding.ivEmpty.visibility = GONE
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchJob?.cancel()
+    }
+
 
     companion object {
         const val LOADING = "Loading"

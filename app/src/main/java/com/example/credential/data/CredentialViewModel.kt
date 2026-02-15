@@ -58,4 +58,17 @@ class CredentialViewModel @Inject constructor(private val repository: Credential
             repository.deleteCredential(id)
         }
     }
+
+    fun filterByQuery(query: String) {
+        if (query.isEmpty()) {
+            getCredentialListFromDb(currentFilterId)
+            return
+        }
+        _credentialListLiveData.value = UIState.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.searchCredentials(query) {
+                _credentialListLiveData.postValue(it)
+            }
+        }
+    }
 }
