@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
@@ -11,6 +13,7 @@ import com.example.credential.database.entity.CredentialEntity
 import com.example.credential.model.ItemCredential
 import com.example.credential.utils.utility.EncryptionHelper
 import com.google.android.material.textfield.TextInputEditText
+import org.checkerframework.checker.index.qual.GTENegativeOne
 
 fun TextInputEditText.checkEmpty(s: String) {
     if (s.isEmpty()) {
@@ -27,13 +30,6 @@ fun DialogFragment.setWidthPercent(percentage: Int) {
     dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
 }
 
-fun View.toggleFieldVisibility(isVisible: Boolean, vararg linkedViews: View, onToggle: () -> Unit) {
-    val state = if (isVisible) View.VISIBLE else View.GONE
-    this.visibility = state
-    linkedViews.forEach { it.visibility = state }
-    onToggle()
-}
-
 fun List<CredentialEntity>.processList(encryptionHelper: EncryptionHelper): List<ItemCredential> {
     return this.toCredentialModelList().map {
         it.copy(
@@ -44,19 +40,4 @@ fun List<CredentialEntity>.processList(encryptionHelper: EncryptionHelper): List
             }
         )
     }
-}
-
-fun View.showKeyboard() {
-    requestFocus()
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE)
-            as InputMethodManager
-    post {
-        imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
-    }
-}
-
-fun View.hideKeyboard() {
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE)
-            as InputMethodManager
-    imm.hideSoftInputFromWindow(windowToken, 0)
 }

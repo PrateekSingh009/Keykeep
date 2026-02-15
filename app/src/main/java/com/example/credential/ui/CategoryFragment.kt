@@ -15,6 +15,7 @@ import com.example.credential.adapter.CategoryAdapter
 import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentCategoryBinding
 import com.example.credential.model.ItemCategory
+import com.example.credential.utils.extensions.hide
 import com.example.credential.utils.utility.AppConstants
 import com.example.credential.utils.utility.UIState
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,12 +59,12 @@ class CategoryFragment : Fragment() {
 
     private fun setupToolbar() {
         binding.includedLayout.apply {
-            ivIcon.visibility = GONE
+            ivIcon.hide()
             tvTitle.text = TOOLBAR_TITLE
             backBtn.setOnClickListener {
                 parentFragmentManager.popBackStack()
             }
-            ivEndIcon.visibility = GONE
+            ivEndIcon.hide()
         }
     }
 

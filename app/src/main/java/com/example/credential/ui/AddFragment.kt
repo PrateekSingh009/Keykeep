@@ -24,6 +24,7 @@ import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentAddBinding
 import com.example.credential.model.ItemCategory
 import com.example.credential.model.ItemCredential
+import com.example.credential.utils.extensions.hide
 import com.example.credential.utils.extensions.isNotEmptyOrShowError
 import com.example.credential.utils.extensions.isValidEmailOrShowError
 import com.example.credential.utils.extensions.isValidNoteOrShowError
@@ -31,6 +32,7 @@ import com.example.credential.utils.extensions.isValidPasswordOrShowError
 import com.example.credential.utils.extensions.isValidPhoneNumberOrShowError
 import com.example.credential.utils.extensions.isValidUrlOrShowError
 import com.example.credential.utils.extensions.replaceFragment
+import com.example.credential.utils.extensions.show
 import com.example.credential.utils.extensions.toggleFieldVisibility
 import com.example.credential.utils.utility.AppConstants
 import com.example.credential.utils.utility.IconName
@@ -152,16 +154,16 @@ class AddFragment : Fragment() {
     }
 
     private fun showBlock(labelLay: View, inputTil: View, addBtn: View) {
-        labelLay.visibility = VISIBLE
-        inputTil.visibility = VISIBLE
-        addBtn.visibility = GONE
+        labelLay.show()
+        inputTil.show()
+        addBtn.hide()
     }
 
     private fun setupFieldLogic(addBtn: View, removeBtn: View, labelLay: View, inputTil: View) {
         addBtn.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.textContentLayout)
             labelLay.toggleFieldVisibility(true, inputTil) {
-                addBtn.visibility = GONE
+                addBtn.hide()
                 checkAllAddBtnGone()
             }
         }
@@ -169,7 +171,7 @@ class AddFragment : Fragment() {
         removeBtn.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.textContentLayout)
             labelLay.toggleFieldVisibility(false, inputTil) {
-                addBtn.visibility = VISIBLE
+                addBtn.show()
                 (inputTil.findViewById<TextInputLayout>(inputTil.id).editText)?.text?.clear()
                 checkAllAddBtnGone()
             }
@@ -181,7 +183,7 @@ class AddFragment : Fragment() {
             val anyVisible = listOf(btnAddUrl, btnAddPhone, btnAddNote, btnAddEmail)
                 .any { it.visibility == VISIBLE }
 
-            tvAddDetail.visibility = if (anyVisible) VISIBLE else GONE
+            tvAddDetail.apply { if (anyVisible) show() else hide() }
         }
     }
 
@@ -250,7 +252,7 @@ class AddFragment : Fragment() {
 
     private fun setupToolbar() {
         binding.includedLayout.apply {
-            imageCardView.visibility = GONE
+            imageCardView.hide()
             tvTitle.text = if (isEditMode)
                 AppConstants.EDIT_CREDENTIAL
             else
@@ -258,7 +260,7 @@ class AddFragment : Fragment() {
             backBtn.setOnClickListener {
                 parentFragmentManager.popBackStack()
             }
-            ivEndIcon.visibility = GONE
+            ivEndIcon.hide()
         }
     }
 

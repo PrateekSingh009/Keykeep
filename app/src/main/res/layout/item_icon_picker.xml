@@ -15,7 +15,6 @@
         android:layout_height="44dp"
         android:layout_gravity="center"
         android:scaleType="fitCenter"
-        android:padding="12dp"
-        android:contentDescription="Icon" />
+        android:padding="12dp"/>
 
 </FrameLayout>

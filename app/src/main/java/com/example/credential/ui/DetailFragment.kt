@@ -21,7 +21,9 @@ import com.example.credential.R
 import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentDetailBinding
 import com.example.credential.model.ItemCredential
+import com.example.credential.utils.extensions.hide
 import com.example.credential.utils.extensions.replaceFragment
+import com.example.credential.utils.extensions.show
 import com.example.credential.utils.utility.AppConstants
 import com.example.credential.utils.utility.StringHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -116,7 +118,7 @@ class DetailFragment : Fragment() {
             backBtn.setOnClickListener {
                 parentFragmentManager.popBackStack()
             }
-            ivEndIcon.visibility = View.GONE
+            ivEndIcon.hide()
         }
     }
 
@@ -156,9 +158,9 @@ class DetailFragment : Fragment() {
                 bindOptionalRow(it.phoneNumber, rowPhoneNumber, sepPhoneNumber, tvPhoneNumber)
 
                 if (it.notes.isNullOrBlank()) {
-                    rowNote.visibility = View.GONE
+                    rowNote.hide()
                 } else {
-                    rowNote.visibility = View.VISIBLE
+                    rowNote.show()
                     tvNotes.text = it.notes
                 }
             }
@@ -167,11 +169,11 @@ class DetailFragment : Fragment() {
 
     private fun bindOptionalRow(data: String?, row: View, separator: View, textView: TextView) {
         if (data.isNullOrBlank()) {
-            row.visibility = View.GONE
-            separator.visibility = View.GONE
+            row.hide()
+            separator.hide()
         } else {
-            row.visibility = View.VISIBLE
-            separator.visibility = View.VISIBLE
+            row.show()
+            separator.show()
             textView.text = data
         }
     }

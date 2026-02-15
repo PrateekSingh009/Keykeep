@@ -57,7 +57,7 @@
         android:backgroundTint="@color/start_color"
         android:layout_gravity="bottom"
         android:fontFamily="@font/amiko_bold"
-        android:text="Remove Filter"
+        android:text="@string/remove_filter"
         app:icon="@drawable/ic_filter_remove"
         app:iconGravity="textStart"
         android:textColor="@android:color/white"

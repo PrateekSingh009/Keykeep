@@ -27,10 +27,12 @@ import com.example.credential.adapter.CredentialAdapter
 import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentListBinding
 import com.example.credential.model.ItemCredential
+import com.example.credential.utils.extensions.hide
 import com.example.credential.utils.extensions.hideKeyboard
 import com.example.credential.utils.utility.MarginDividerItemDecoration
 import com.example.credential.utils.utility.UIState
 import com.example.credential.utils.extensions.replaceFragment
+import com.example.credential.utils.extensions.show
 import com.example.credential.utils.extensions.showKeyboard
 import com.example.credential.utils.utility.AppConstants
 import dagger.hilt.android.AndroidEntryPoint
@@ -141,12 +143,12 @@ class ListFragment : Fragment() {
 
         binding.apply {
             if (isSearching) {
-                searchBarLayout.visibility = View.VISIBLE
+                searchBarLayout.show()
                 toolbar.title = ""
                 etSearch.requestFocus()
                 etSearch.showKeyboard()
             } else {
-                searchBarLayout.visibility = View.GONE
+                searchBarLayout.hide()
                 toolbar.title = getString(R.string.app_name)
                 etSearch.text.clear()
                 etSearch.hideKeyboard()
@@ -248,11 +250,11 @@ class ListFragment : Fragment() {
         val rootLayout = binding.root.parent as? ViewGroup ?: return
         if (isEmpty) {
             TransitionManager.beginDelayedTransition(rootLayout)
-            binding.rvCredentials.visibility = GONE
-            binding.ivEmpty.visibility = VISIBLE
+            binding.rvCredentials.hide()
+            binding.ivEmpty.show()
         } else {
-            binding.rvCredentials.visibility = VISIBLE
-            binding.ivEmpty.visibility = GONE
+            binding.rvCredentials.show()
+            binding.ivEmpty.hide()
         }
     }
 

@@ -45,7 +45,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:background="@null"
-                    android:hint="Search..."
+                    android:hint="@string/hint_search"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:paddingStart="16dp"
@@ -87,14 +87,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_lock"
                 android:drawablePadding="8dp"
-                android:drawableTint="@color/off_white"
                 android:fontFamily="@font/alegreya_sans"
                 android:gravity="center_vertical"
-                android:text="All items encrypted on your device"
+                android:text="@string/title_encryption_card"
                 android:textColor="@color/off_white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:drawableStartCompat="@drawable/ic_lock"
+                app:drawableTint="@color/off_white" />
 
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
