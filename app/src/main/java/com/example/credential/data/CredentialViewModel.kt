@@ -15,6 +15,10 @@ import javax.inject.Inject
 @HiltViewModel
 class CredentialViewModel @Inject constructor(private val repository: CredentialRepository) : ViewModel() {
 
+    init {
+        checkAndInitCategories()
+    }
+
     private val _credentialListLiveData = MutableLiveData<UIState<List<ItemCredential>>>()
     val credentialListLiveData: LiveData<UIState<List<ItemCredential>>>
         get() = _credentialListLiveData
@@ -69,6 +73,18 @@ class CredentialViewModel @Inject constructor(private val repository: Credential
             repository.searchCredentials(query) {
                 _credentialListLiveData.postValue(it)
             }
+        }
+    }
+
+    private fun checkAndInitCategories() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val initialCategories = listOf(
+                ItemCategory(id = 1, name = "Social","ic_social",0),
+                ItemCategory(id = 2, name = "Bank","ic_bank",0),
+                ItemCategory(id = 3, name = "Work","ic_work",0),
+                ItemCategory(id = 4, name = "General","ic_stack",0)
+            )
+            initialCategories.forEach { repository.addCategoryToDB(it) }
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.example.credential.database.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 import com.example.credential.database.entity.CategoryEntity
@@ -36,7 +38,7 @@ interface CredentialDao {
     @Query("DELETE FROM credentials WHERE id = :id")
     suspend fun deleteCredentials(id: Int)
 
-    @Upsert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun upsert(category: CategoryEntity)
 
     @Query("""
