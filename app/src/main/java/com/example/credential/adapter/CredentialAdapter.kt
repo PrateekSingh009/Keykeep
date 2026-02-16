@@ -25,6 +25,6 @@ class CredentialAdapter(
     }
 
     override fun onBindViewHolder(holder: ListItemViewHolder, position: Int) {
-        holder.bind(holder.itemView.context,getItem(position),onClick)
+        holder.bind(holder.itemView.context,position,itemCount,getItem(position),onClick)
     }
 }

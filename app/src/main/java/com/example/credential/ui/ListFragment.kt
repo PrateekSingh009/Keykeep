@@ -23,6 +23,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.credential.R
+import com.example.credential.R.drawable.bg_round_corner_8
 import com.example.credential.adapter.CredentialAdapter
 import com.example.credential.data.CredentialViewModel
 import com.example.credential.databinding.FragmentListBinding
@@ -80,6 +81,7 @@ class ListFragment : Fragment() {
     }
 
     private fun setupToolBar() {
+        binding.swipeRefresh.setColorSchemeResources(R.color.start_color, R.color.center_color)
         binding.toolbar.apply {
             title = getString(R.string.app_name)
             setOnMenuItemClickListener { menuItem ->
@@ -175,6 +177,10 @@ class ListFragment : Fragment() {
     }
 
     private fun setupListeners() {
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.getCredentialListFromDb(viewModel.currentFilterId)
+        }
+
         binding.ivSearchIconInner.setOnClickListener {
             toggleSearch(false)
         }
@@ -209,6 +215,9 @@ class ListFragment : Fragment() {
 
     private fun setupObserver() {
         viewModel.credentialListLiveData.observe(viewLifecycleOwner) { state ->
+            if (state !is UIState.Loading) {
+                binding.swipeRefresh.isRefreshing = false
+            }
             when (state) {
                 is UIState.Loading -> {
                     Log.e(ContentValues.TAG, LOADING)

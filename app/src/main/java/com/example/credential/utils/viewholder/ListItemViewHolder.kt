@@ -13,9 +13,16 @@ class ListItemViewHolder(
     private val binding : ItemCredentialBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(context: Context,item : ItemCredential?,onClick : ((item : ItemCredential) -> Unit)?) {
+    fun bind(context: Context,position: Int,length: Int,item : ItemCredential?,onClick : ((item : ItemCredential) -> Unit)?) {
         item?.let{
             binding.apply {
+                val backgroundRes = when {
+                    length == 1 -> R.drawable.bg_round_corner_8
+                    position == 0 -> R.drawable.bg_up_round_corner_8
+                    position == length - 1 -> R.drawable.bg_down_round_corner_8
+                    else -> R.drawable.bg_rectangle
+                }
+                root.setBackgroundResource(backgroundRes)
                 ivLogo.setImageResource(context.resources.getIdentifier(it.icon,"drawable",context.packageName))
                 tvTitle.text = it.title
                 tvUsername.text = it.username
